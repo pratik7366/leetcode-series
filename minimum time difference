@@ -1,0 +1,30 @@
+//  Given a list of 24-hour clock time points in "HH:MM" format, return the minimum minutes difference between any two time-points in the list.
+
+
+
+class Solution {
+public:
+    int timeToMinutes(const string& time) {
+    int hours = stoi(time.substr(0, 2));
+    int minutes = stoi(time.substr(3, 2));
+    return hours * 60 + minutes;
+}
+
+int findMinDifference(vector<string>& timePoints) {
+    vector<int> minutes;
+    for (const string& time : timePoints) {
+        minutes.push_back(timeToMinutes(time));
+    }
+
+    sort(minutes.begin(), minutes.end());
+
+    int minDifference = 1440 + minutes[0] - minutes.back();
+    for (int i = 1; i < minutes.size(); ++i) {
+        minDifference = min(minDifference, minutes[i] - minutes[i - 1]);
+    }
+
+    return minDifference;
+}
+        
+    
+};
