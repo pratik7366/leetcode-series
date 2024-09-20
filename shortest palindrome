@@ -1,0 +1,32 @@
+You are given a string s. You can convert s to a 
+palindrome
+ by adding characters in front of it.
+
+Return the shortest palindrome you can find by performing this transformation.
+
+
+//c++ code 
+class Solution {
+public:
+
+        std::string shortestPalindrome(std::string s) {
+            std::string rev_s = s;
+            std::reverse(rev_s.begin(), rev_s.end());
+            std::string l = s + "#" + rev_s;
+            int n = l.size();
+            std::vector<int> p(n, 0);
+
+            for (int i = 1; i < n; ++i) {
+                int j = p[i - 1];
+                while (j > 0 && l[i] != l[j])
+                    j = p[j - 1];
+                if (l[i] == l[j])
+                    ++j;
+                p[i] = j;
+            }
+
+            return rev_s.substr(0, s.size() - p[n - 1]) + s;
+        
+    
+}
+};
