@@ -1,0 +1,28 @@
+
+Given two strings s1 and s2, return true if s2 contains a 
+permutation
+ of s1, or false otherwise.
+
+In other words, return true if one of s1's permutations is the substring of s2.
+
+
+//c++ code 
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        
+    if (s1.length() > s2.length()) return false;
+
+    vector<int> s1_count(26, 0), s2_count(26, 0);
+    for (char c : s1) s1_count[c - 'a']++;
+
+    for (int i = 0; i < s2.length(); i++) {
+        s2_count[s2[i] - 'a']++;
+        if (i >= s1.length()) s2_count[s2[i - s1.length()] - 'a']--;
+        if (s1_count == s2_count) return true;
+    }
+    return false;
+
+
+    }
+};
