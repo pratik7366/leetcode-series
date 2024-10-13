@@ -1,0 +1,50 @@
+
+You have k lists of sorted integers in non-decreasing order. Find the smallest range that includes at least one number from each of the k lists.
+
+We define the range [a, b] is smaller than range [c, d] if b - a < d - c or a < c if b - a == d - c.
+
+ 
+
+
+
+// c++ code 
+class Solution {
+public:
+        struct Element {
+    int value, index, listIndex;
+    Element(int v, int i, int li) : value(v), index(i), listIndex(li) {}
+    bool operator<(const Element& other) const {
+        return value > other.value;
+    }
+};
+
+vector<int> smallestRange(vector<vector<int>>& nums) {
+    priority_queue<Element> minHeap;
+    int maxVal = INT_MIN, start = 0, end = INT_MAX;
+
+    for (int i = 0; i < nums.size(); ++i) {
+        minHeap.push(Element(nums[i][0], 0, i));
+        maxVal = max(maxVal, nums[i][0]);
+    }
+
+    while (true) {
+        Element minElement = minHeap.top();
+        minHeap.pop();
+        if (maxVal - minElement.value < end - start || (maxVal - minElement.value == end - start && minElement.value < start)) {
+            start = minElement.value;
+            end = maxVal;
+        }
+
+        if (minElement.index + 1 == nums[minElement.listIndex].size())
+            break;
+
+        int nextValue = nums[minElement.listIndex][minElement.index + 1];
+        minHeap.push(Element(nextValue, minElement.index + 1, minElement.listIndex));
+        maxVal = max(maxVal, nextValue);
+    }
+
+    return {start, end};
+
+
+    }
+};
