@@ -1,0 +1,30 @@
+You are given a 0-indexed integer array nums and an integer k. You have a starting score of 0.
+
+In one operation:
+
+choose an index i such that 0 <= i < nums.length,
+increase your score by nums[i], and
+replace nums[i] with ceil(nums[i] / 3).
+Return the maximum possible score you can attain after applying exactly k operations.
+
+The ceiling function ceil(val) is the least integer greater than or equal to val.
+
+
+// c++ code 
+class Solution {
+public:
+    long long maxKelements(vector<int>& nums, int k) {
+
+    priority_queue<int> pq(nums.begin(), nums.end());
+    int score = 0;
+    while (k--) {
+        int top = pq.top();
+        pq.pop();
+        score += top;
+        pq.push(ceil(top / 3.0));
+    }
+    return score;
+
+
+    }
+};
