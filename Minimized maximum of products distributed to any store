@@ -1,0 +1,26 @@
+You are given an integer n indicating there are n specialty retail stores. There are m product types of varying amounts, which are given as a 0-indexed integer array quantities, where quantities[i] represents the number of products of the ith product type.
+
+
+/c++ code 
+class Solution {
+public:
+    
+        bool canDistribute(const vector<int>& quantities, int n, int x) {
+    int stores_needed = 0;
+    for (int quantity : quantities) {
+        stores_needed += (quantity + x - 1) / x;
+        if (stores_needed > n) return false;
+    }
+    return true;
+}
+
+int minimizedMaximum(int n, vector<int>& quantities) {
+    int left = 1, right = *max_element(quantities.begin(), quantities.end());
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+        if (canDistribute(quantities, n, mid)) right = mid;
+        else left = mid + 1;
+    }
+    return left;
+    }
+};
