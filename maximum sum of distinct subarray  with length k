@@ -1,0 +1,26 @@
+You are given an integer array nums and an integer k. Find the maximum subarray sum of all the subarrays of nums that meet the following conditions:
+
+The length of the subarray is k, and
+All the elements of the subarray are distinct.
+Return the maximum subarray sum of all the subarrays that meet the conditions. If no subarray meets the conditions, return 0.
+
+//c++ code 
+class Solution {
+public:
+    long long maximumSubarraySum(vector<int>& nums, int k) {
+        
+    int n = nums.size(); 
+    long long maxSum = 0, currentSum = 0;
+    unordered_set<int> uniqueElements;
+    for (int i = 0, j = 0; j < n; ++j) {
+        currentSum += nums[j];
+        while (uniqueElements.count(nums[j]) || j - i + 1 > k) {
+            currentSum -= nums[i];
+            uniqueElements.erase(nums[i++]);
+        }
+        uniqueElements.insert(nums[j]);
+        if (j - i + 1 == k) maxSum = max(maxSum, currentSum);
+    }
+    return maxSum;
+    }
+};
