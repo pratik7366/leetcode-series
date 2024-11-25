@@ -1,0 +1,41 @@
+on an 2 x 3 board, there are five tiles labeled from 1 to 5, and an empty square represented by 0. A move consists of choosing 0 and a 4-directionally adjacent number and swapping it.
+
+The state of the board is solved if and only if the board is [[1,2,3],[4,5,0]].
+
+Given the puzzle board board, return the least number of moves required so that the state of the board is solved. If it is impossible for the state of the board to be solved, return -1.
+
+
+//c++ code 
+class Solution {
+public:
+    int slidingPuzzle(vector<vector<int>>& board) {
+    
+    string target = "123450";
+    string start = "";
+    for (auto& row : board) {
+        for (int num : row) start += to_string(num);
+    }
+    vector<vector<int>> neighbors = {
+        {1, 3}, {0, 2, 4}, {1, 5}, {0, 4}, {1, 3, 5}, {2, 4}
+    };
+    queue<pair<string, int>> q;
+    unordered_set<string> visited;
+    q.push({start, 0});
+    visited.insert(start);
+    while (!q.empty()) {
+        auto [curr, steps] = q.front();
+        q.pop();
+        if (curr == target) return steps;
+        int zeroPos = curr.find('0');
+        for (int next : neighbors[zeroPos]) {
+            string nextState = curr;
+            swap(nextState[zeroPos], nextState[next]);
+            if (!visited.count(nextState)) {
+                visited.insert(nextState);
+                q.push({nextState, steps + 1});
+            }
+        }
+    }
+    return -1;
+    }
+};
