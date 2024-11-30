@@ -1,0 +1,54 @@
+You are given a 0-indexed 2D integer array pairs where pairs[i] = [starti, endi]. An arrangement of pairs is valid if for every index i where 1 <= i < pairs.length, we have endi-1 == starti.
+
+Return any valid arrangement of pairs.
+
+Note: The inputs will be generated such that there exists a valid arrangement of pairs.
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    vector<vector<int>> validArrangement(vector<vector<int>>& pairs) {
+        
+    unordered_map<int, vector<int>> graph;
+    unordered_map<int, int> inDegree, outDegree;
+    for (auto& pair : pairs) {
+        graph[pair[0]].push_back(pair[1]);
+        outDegree[pair[0]]++;
+        inDegree[pair[1]]++;
+    }
+
+    int start = pairs[0][0];
+    for (auto& [node, out] : outDegree) {
+        if (out > inDegree[node]) {
+            start = node;
+            break;
+        }
+    }
+
+    stack<int> stk;
+    vector<int> path;
+    stk.push(start);
+    while (!stk.empty()) {
+        int u = stk.top();
+        if (!graph[u].empty()) {
+            int v = graph[u].back();
+            graph[u].pop_back();
+            stk.push(v);
+        } else {
+            path.push_back(u);
+            stk.pop();
+        }
+    }
+
+    reverse(path.begin(), path.end());
+    vector<vector<int>> result;
+    for (int i = 0; i < path.size() - 1; ++i) {
+        result.push_back({path[i], path[i + 1]});
+    }
+    return result;
+    }
+};
+
