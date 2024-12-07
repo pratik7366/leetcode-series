@@ -1,0 +1,38 @@
+You are given an integer array nums where the ith bag contains nums[i] balls. You are also given an integer maxOperations.
+
+You can perform the following operation at most maxOperations times:
+
+Take any bag of balls and divide it into two new bags with a positive number of balls.
+For example, a bag of 5 balls can become two new bags of 1 and 4 balls, or two new bags of 2 and 3 balls.
+
+
+
+//c++ code 
+class Solution {
+public:
+    
+       bool canDivide(vector<int>& nums, int maxBalls, int maxOperations) {
+    int operations = 0;
+    for (int balls : nums) {
+        if (balls > maxBalls) {
+            operations += (balls - 1) / maxBalls;
+            if (operations > maxOperations) return false;
+        }
+    }
+    return true;
+}
+
+int minimumSize(vector<int>& nums, int maxOperations) {
+    int left = 1, right = *max_element(nums.begin(), nums.end()), result = right;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (canDivide(nums, mid, maxOperations)) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result; 
+    }
+};
