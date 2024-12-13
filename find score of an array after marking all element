@@ -1,0 +1,34 @@
+You are given an array nums consisting of positive integers.
+
+Starting with score = 0, apply the following algorithm:
+
+Choose the smallest integer of the array that is not marked. If there is a tie, choose the one with the smallest index.
+Add the value of the chosen integer to score.
+Mark the chosen element and its two adjacent elements if they exist.
+Repeat until all the array elements are marked.
+
+
+//c++ code 
+class Solution {
+public:
+    long long findScore(vector<int>& nums) {
+        
+    long long  n = nums.size(), score = 0;
+    set<pair<int, int>> elements;
+    vector<bool> marked(n, false);
+    
+    for (int i = 0; i < n; ++i)
+        elements.insert({nums[i], i});
+    
+    for (auto& elem : elements) {
+        int val = elem.first, idx = elem.second;
+        if (marked[idx]) continue;
+        score += val;
+        marked[idx] = true;
+        if (idx > 0) marked[idx - 1] = true;
+        if (idx < n - 1) marked[idx + 1] = true;
+    }
+    
+    return score;
+    }
+};
