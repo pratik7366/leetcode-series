@@ -1,0 +1,29 @@
+You are given a 0-indexed integer array nums. A subarray of nums is called continuous if:
+
+Let i, i + 1, ..., j be the indices in the subarray. Then, for each pair of indices i <= i1, i2 <= j, 0 <= |nums[i1] - nums[i2]| <= 2.
+Return the total number of continuous subarrays.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+
+//c++ code 
+class Solution {
+public:
+    long long continuousSubarrays(vector<int>& nums) {
+        
+        int n = nums.size();
+        long long count = 0;
+        multiset<int> window;
+        int left = 0;
+
+        for (int right = 0; right < n; ++right) {
+            window.insert(nums[right]);
+            while (*window.rbegin() - *window.begin() > 2) {
+                window.erase(window.find(nums[left]));
+                left++;
+            }
+            count += (right - left + 1);
+        }
+        return count;
+    }
+};
