@@ -1,0 +1,41 @@
+You are given a list of strings of the same length words and a string target.
+
+Your task is to form target using the given words under the following rules:
+
+target should be formed from left to right.
+To form the ith character (0-indexed) of target, you can choose the kth character of the jth string in words if target[i] = words[j][k].
+Once you use the kth character of the jth string of words, you can no longer use the xth character of any string in words where x <= k. In other words, all characters to the left of or at index k become unusuable for every string.
+Repeat the process until you form the string target.
+
+//c++ code 
+
+class Solution {
+public:
+      const int MOD = 1e9 + 7;
+
+int numWays(vector<string>& words, string target) {
+    int m = target.size(), n = words[0].size();
+    vector<vector<int>> charCount(n, vector<int>(26, 0));
+    
+    for (const string& word : words) {
+        for (int j = 0; j < n; ++j) {
+            charCount[j][word[j] - 'a']++;
+        }
+    }
+
+    vector<vector<long long>> dp(m + 1, vector<long long>(n + 1, 0));
+    for (int j = 0; j <= n; ++j) dp[0][j] = 1;
+
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            dp[i][j] = dp[i][j - 1];
+            if (charCount[j - 1][target[i - 1] - 'a'] > 0) {
+                dp[i][j] += dp[i - 1][j - 1] * charCount[j - 1][target[i - 1] - 'a'] % MOD;
+                dp[i][j] %= MOD;
+            }
+        }
+    }
+
+    return dp[m][n];  
+    }
+};
