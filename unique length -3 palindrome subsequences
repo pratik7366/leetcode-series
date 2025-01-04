@@ -1,0 +1,48 @@
+Given a string s, return the number of unique palindromes of length three that are a subsequence of s.
+
+Note that even if there are multiple ways to obtain the same subsequence, it is still only counted once.
+
+A palindrome is a string that reads the same forwards and backwards.
+
+A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+For example, "ace" is a subsequence of "abcde".
+
+
+//c++ code 
+
+class Solution {
+public:
+    int countPalindromicSubsequence(string s) {
+   
+    int n = s.size();
+    vector<vector<int>> left(26, vector<int>(n, -1));
+    vector<vector<int>> right(26, vector<int>(n, -1));
+    unordered_set<string> uniquePalindromes;
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < 26; ++j) {
+            left[j][i] = (i > 0 ? left[j][i - 1] : -1);
+        }
+        left[s[i] - 'a'][i] = i;
+    }
+
+    for (int i = n - 1; i >= 0; --i) {
+        for (int j = 0; j < 26; ++j) {
+            right[j][i] = (i < n - 1 ? right[j][i + 1] : -1);
+        }
+        right[s[i] - 'a'][i] = i;
+    }
+
+    for (int i = 1; i < n - 1; ++i) {
+        for (int j = 0; j < 26; ++j) {
+            if (left[j][i - 1] != -1 && right[j][i + 1] != -1) {
+                string palindrome = {char('a' + j), s[i], char('a' + j)};
+                uniquePalindromes.insert(palindrome);
+            }
+        }
+    }
+
+    return uniquePalindromes.size();  
+    }
+};
