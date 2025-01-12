@@ -1,0 +1,33 @@
+
+A parentheses string is a non-empty string consisting only of '(' and ')'. It is valid if any of the following conditions is true:
+
+It is ().
+It can be written as AB (A concatenated with B), where A and B are valid parentheses strings.
+It can be written as (A), where A is a valid parentheses string.
+
+
+//c++ code 
+
+class Solution {
+public:
+    bool canBeValid(string s, string locked) {
+    
+    int n = s.length();
+    if (n % 2 != 0) return false;
+    int openUnlocked = 0, balance = 0;
+    for (int i = 0; i < n; ++i) {
+        if (locked[i] == '0') ++openUnlocked;
+        else if (s[i] == '(') ++balance;
+        else --balance;
+        if (balance < -openUnlocked) return false;
+    }
+    openUnlocked = 0; balance = 0;
+    for (int i = n - 1; i >= 0; --i) {
+        if (locked[i] == '0') ++openUnlocked;
+        else if (s[i] == ')') ++balance;
+        else --balance;
+        if (balance < -openUnlocked) return false;
+    }
+    return true;
+    }
+};
