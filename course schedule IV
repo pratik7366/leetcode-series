@@ -1,0 +1,65 @@
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course ai first if you want to take course bi.
+
+For example, the pair [0, 1] indicates that you have to take course 0 before you can take course 1.
+Prerequisites can also be indirect. If course a is a prerequisite of course b, and course b is a prerequisite of course c, then course a is a prerequisite of course c.
+
+
+
+//c++  code 
+
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+ 
+
+    vector<vector<bool>> isPrerequisite(numCourses, vector<bool>(numCourses, false));
+
+    for (const auto& pre : prerequisites) {
+        isPrerequisite[pre[0]][pre[1]] = true;
+    }
+
+    for (int k = 0; k < numCourses; ++k) {
+        for (int i = 0; i < numCourses; ++i) {
+            for (int j = 0; j < numCourses; ++j) {
+                if (isPrerequisite[i][k] && isPrerequisite[k][j]) {
+                    isPrerequisite[i][j] = true;
+                }
+            }
+        }
+    }
+
+    vector<bool> answer;
+    for (const auto& query : queries) {
+        answer.push_back(isPrerequisite[query[0]][query[1]]);
+    }
+
+    return answer;
+}
+
+int main() {
+    int numCourses1 = 2;
+    vector<vector<int>> prerequisites1 = {{1, 0}};
+    vector<vector<int>> queries1 = {{0, 1}, {1, 0}};
+    vector<bool> res1 = checkIfPrerequisite(numCourses1, prerequisites1, queries1);
+    for (bool x : res1) cout << (x ? "true" : "false") << " ";
+    cout << endl;
+
+    int numCourses2 = 2;
+    vector<vector<int>> prerequisites2 = {};
+    vector<vector<int>> queries2 = {{1, 0}, {0, 1}};
+    vector<bool> res2 = checkIfPrerequisite(numCourses2, prerequisites2, queries2);
+    for (bool x : res2) cout << (x ? "true" : "false") << " ";
+    cout << endl;
+
+    int numCourses3 = 3;
+    vector<vector<int>> prerequisites3 = {{1, 2}, {1, 0}, {2, 0}};
+    vector<vector<int>> queries3 = {{1, 0}, {1, 2}};
+    vector<bool> res3 = checkIfPrerequisite(numCourses3, prerequisites3, queries3);
+    for (bool x : res3) cout << (x ? "true" : "false") << " ";
+    cout << endl;
+
+    return 0;
+
+
+    }
+};
