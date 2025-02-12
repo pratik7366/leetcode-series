@@ -1,0 +1,44 @@
+
+You are given a 0-indexed array nums consisting of positive integers. You can choose two indices i and j, such that i != j, and the sum of digits of the number nums[i] is equal to that of nums[j].
+
+Return the maximum value of nums[i] + nums[j] that you can obtain over all possible indices i and j that satisfy the conditions.
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    
+        int digitSum(int num) {
+    int sum = 0;
+    while (num > 0) {
+        sum += num % 10;
+        num /= 10;
+    }
+    return sum;
+}
+
+int maximumSum(vector<int>& nums) {
+    unordered_map<int, pair<int, int>> digitSumMap;
+    int maxSum = -1;
+
+    for (int num : nums) {
+        int sum = digitSum(num);
+        auto& p = digitSumMap[sum];
+
+        if (num > p.first) {
+            p.second = p.first;
+            p.first = num;
+        } else if (num > p.second) {
+            p.second = num;
+        }
+
+        if (p.second > 0) {
+            maxSum = max(maxSum, p.first + p.second);
+        }
+    }
+
+    return maxSum;
+    }
+};
