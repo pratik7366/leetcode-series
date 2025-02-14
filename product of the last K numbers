@@ -1,0 +1,35 @@
+Design an algorithm that accepts a stream of integers and retrieves the product of the last k integers of the stream.
+
+Implement the ProductOfNumbers class:
+
+ProductOfNumbers() Initializes the object with an empty stream.
+void add(int num) Appends the integer num to the stream.
+int getProduct(int k) Returns the product of the last k numbers in the current list. You can assume that always the current list has at least k numbers.
+The test cases are generated so that, at any time, the product of any contiguous sequence of numbers will fit into a single 32-bit integer without overflowing.
+
+ 
+
+
+
+//c++ code
+
+class ProductOfNumbers {
+    private: 
+     vector<int> prefixProduct;
+public:
+    ProductOfNumbers() {
+          prefixProduct = {1};
+    }
+    void add(int num) {
+         if (num == 0) {
+            prefixProduct = {1};
+        } else {
+            prefixProduct.push_back(prefixProduct.back() * num);
+        } 
+    }
+    int getProduct(int k) {
+          int n = prefixProduct.size();
+        if (k >= n) return 0;
+        return prefixProduct.back() / prefixProduct[n - k - 1];
+    }
+};
