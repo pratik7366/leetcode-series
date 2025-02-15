@@ -1,0 +1,33 @@
+Given a positive integer n, return the punishment number of n.
+
+The punishment number of n is defined as the sum of the squares of all integers i such that:
+
+1 <= i <= n
+The decimal representation of i * i can be partitioned into contiguous substrings such that the sum of the integer values of these substrings equals i.
+
+
+
+//c++ code 
+
+class Solution {
+public:
+bool isValidPartition(string s, int index, int sum, int target) {
+    if (index == s.length()) return sum == target;
+    int num = 0;
+    for (int i = index; i < s.length(); ++i) {
+        num = num * 10 + (s[i] - '0');
+        if (isValidPartition(s, i + 1, sum + num, target)) return true;
+    }
+    return false;
+}
+    int punishmentNumber(int n) {
+        int result = 0;
+    for (int i = 1; i <= n; ++i) {
+        int square = i * i;
+        if (isValidPartition(to_string(square), 0, 0, i)) {
+            result += square;
+        }
+    }
+    return result;
+    }
+};
