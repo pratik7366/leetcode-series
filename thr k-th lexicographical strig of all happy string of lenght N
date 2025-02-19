@@ -1,0 +1,37 @@
+
+A happy string is a string that:
+
+consists only of letters of the set ['a', 'b', 'c'].
+s[i] != s[i + 1] for all values of i from 1 to s.length - 1 (string is 1-indexed).
+For example, strings "abc", "ac", "b" and "abcbabcbcb" are all happy strings and strings "aa", "baa" and "ababbc" are not happy strings.
+
+Given two integers n and k, consider a list of all happy strings of length n sorted in lexicographical order.
+
+Return the kth string of this list or return an empty string if there are less than k happy strings of length n.
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    
+void generateHappyStrings(int n, string current, vector<string>& result) {
+    if (current.length() == n) {
+        result.push_back(current);
+        return;
+    }
+    for (char c : {'a', 'b', 'c'}) {
+        if (current.empty() || current.back() != c) {
+            generateHappyStrings(n, current + c, result);
+        }
+    }
+}
+
+string getHappyString(int n, int k) {
+    vector<string> happyStrings;
+    generateHappyStrings(n, "", happyStrings);
+    return k <= happyStrings.size() ? happyStrings[k - 1] : "";
+
+    }
+};
