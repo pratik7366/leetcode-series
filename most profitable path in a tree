@@ -1,0 +1,91 @@
+There is an undirected tree with n nodes labeled from 0 to n - 1, rooted at node 0. You are given a 2D integer array edges of length n - 1 where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the tree.
+
+At every node i, there is a gate. You are also given an array of even integers amount, where amount[i] represents:
+
+the price needed to open the gate at node i, if amount[i] is negative, or,
+the cash reward obtained on opening the gate at node i, otherwise.
+The game goes on as follows:
+
+Initially, Alice is at node 0 and Bob is at node bob.
+At every second, Alice and Bob each move to an adjacent node. Alice moves towards some leaf node, while Bob moves towards node 0.
+
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+
+         unordered_map<int, vector<int>> adj;
+    unordered_map<int, int> bobMap;
+    int aliceIncome;
+    bool DFSBob(int curr, int t, vector<bool>&  visited) {
+        visited[curr] = true;
+        bobMap[curr] = t;
+
+        if(curr == 0) { 
+            return true;
+        }
+
+        for(auto &ngbr : adj[curr]) {
+            if(!visited[ngbr]) {
+                if(DFSBob(ngbr, t+1, visited) == true) {
+                    return true;
+                }
+            }
+        }
+
+        bobMap.erase(curr);
+        return false;
+    }
+
+    void DFSAlice(int curr, int t, int income, vector<bool>& visited, vector<int>& amount) {
+        visited[curr] = true;
+
+        if(bobMap.find(curr) == bobMap.end() || t < bobMap[curr]) {
+            income += amount[curr];
+        } else if(t == bobMap[curr]) {
+            income += (amount[curr]/2);
+        }
+
+
+        if(adj[curr].size() == 1 && curr != 0) {
+            aliceIncome = max(aliceIncome, income);
+        }
+
+    
+
+        for(int &ngbr : adj[curr]) {
+            if(!visited[ngbr]) {
+                DFSAlice(ngbr, t+1, income, visited, amount);
+            }
+        }
+
+    }
+
+    int mostProfitablePath(vector<vector<int>>& edges, int bob, vector<int>& amount) {
+        int n = amount.size(); 
+
+        aliceIncome = INT_MIN;
+        for(vector<int>& edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+
+       
+        int time = 0;
+        vector<bool> visited(n, false);
+        DFSBob(bob, time, visited);
+        
+        int income = 0;
+        visited.assign(n, false);
+        DFSAlice(0, 0, income, visited, amount);
+
+        return aliceIncome;
+    }
+};
