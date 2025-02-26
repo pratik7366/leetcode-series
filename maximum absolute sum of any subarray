@@ -1,0 +1,28 @@
+You are given an integer array nums. The absolute sum of a subarray [numsl, numsl+1, ..., numsr-1, numsr] is abs(numsl + numsl+1 + ... + numsr-1 + numsr).
+
+Return the maximum absolute sum of any (possibly empty) subarray of nums.
+
+Note that abs(x) is defined as follows:
+
+If x is a negative integer, then abs(x) = -x.
+If x is a non-negative integer, then abs(x) = x.
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    int maxAbsoluteSum(vector<int>& nums) {
+        
+    int maxSum = 0, minSum = 0, sum1 = 0, sum2 = 0;
+    for (int num : nums) {
+        sum1 = max(0, sum1 + num);
+        sum2 = min(0, sum2 + num);
+        maxSum = max(maxSum, sum1);
+        minSum = min(minSum, sum2);
+    }
+    return max(maxSum, abs(minSum));
+    }
+};
