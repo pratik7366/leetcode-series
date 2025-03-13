@@ -1,0 +1,61 @@
+You are given an integer array nums of length n and a 2D array queries where queries[i] = [li, ri, vali].
+
+Each queries[i] represents the following action on nums:
+
+Decrement the value at each index in the range [li, ri] in nums by at most vali.
+The amount by which each value is decremented can be chosen independently for each index.
+A Zero Array is an array with all its elements equal to 0.
+
+Return the minimum possible non-negative value of k, such that after processing the first k queries in sequence, nums becomes a Zero Array. If no such k exists, return -1.
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    int n, Q;
+    
+    bool checkWithDifferenceArray(vector<int>& nums, vector<vector<int>>& queries, int k) {
+        vector<int> diff(n + 1, 0);
+        
+        for (int i = 0; i <= k; i++) {
+            int l = queries[i][0];
+            int r = queries[i][1];
+            int x = queries[i][2];
+            
+            diff[l] += x;
+            if (r + 1 < n) diff[r + 1] -= x;
+        }
+        
+        int cumSum = 0;
+        for (int i = 0; i < n; i++) {
+            cumSum += diff[i];
+            if (nums[i] - cumSum > 0) return false;
+        }
+        return true;
+    }
+
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        n = nums.size();
+        Q = queries.size();
+        
+        if (all_of(nums.begin(), nums.end(), [](int x) { return x == 0; })) {
+            return 0;
+        }
+        
+        int left = 0, right = Q - 1, ans = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (checkWithDifferenceArray(nums, queries, mid)) {
+                ans = mid + 1;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        
+        return ans;
+    }
+};
