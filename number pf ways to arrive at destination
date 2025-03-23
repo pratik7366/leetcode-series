@@ -1,0 +1,49 @@
+You are in a city that consists of n intersections numbered from 0 to n - 1 with bi-directional roads between some intersections. The inputs are generated such that you can reach any intersection from any other intersection and that there is at most one road between any two intersections.
+
+You are given an integer n and a 2D integer array roads where roads[i] = [ui, vi, timei] means that there is a road between intersections ui and vi that takes timei minutes to travel. You want to know in how many ways you can travel from intersection 0 to intersection n - 1 in the shortest amount of time.
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    
+        const int MOD = 1e9 + 7;
+typedef pair<long long, int> P;
+
+int countPaths(int n, vector<vector<int>>& roads) {
+    vector<vector<pair<int, int>>> graph(n);
+    for (auto& road : roads) {
+        graph[road[0]].push_back({road[1], road[2]});
+        graph[road[1]].push_back({road[0], road[2]});
+    }
+    
+    vector<long long> dist(n, LLONG_MAX);
+    vector<int> ways(n, 0);
+    priority_queue<P, vector<P>, greater<P>> pq;
+    
+    dist[0] = 0;
+    ways[0] = 1;
+    pq.push({0, 0});
+    
+    while (!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+        if (d > dist[u]) continue;
+        
+        for (auto [v, time] : graph[u]) {
+            long long newDist = d + time;
+            if (newDist < dist[v]) {
+                dist[v] = newDist;
+                ways[v] = ways[u];
+                pq.push({newDist, v});
+            } else if (newDist == dist[v]) {
+                ways[v] = (ways[v] + ways[u]) % MOD;
+            }
+        }
+    }
+    return ways[n - 1];
+    }
+};
