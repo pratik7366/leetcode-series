@@ -1,0 +1,38 @@
+
+An element x of an integer array arr of length m is dominant if more than half the elements of arr have a value of x.
+
+You are given a 0-indexed integer array nums of length n with one dominant element.
+
+You can split nums at an index i into two arrays nums[0, ..., i] and nums[i + 1, ..., n - 1], but the split is only valid if:
+
+0 <= i < n - 1
+nums[0, ..., i], and nums[i + 1, ..., n - 1] have the same dominant element.
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    int minimumIndex(vector<int>& nums) {
+
+    int n = nums.size();
+    unordered_map<int, int> freq;
+    for (int num : nums) freq[num]++;
+    int dominant = -1, count = 0;
+    for (auto& [num, cnt] : freq) {
+        if (cnt * 2 > n) {
+            dominant = num;
+            count = cnt;
+            break;
+        }
+    }
+    int leftCount = 0;
+    for (int i = 0; i < n - 1; i++) {
+        if (nums[i] == dominant) leftCount++;
+        if (leftCount * 2 > (i + 1) && (count - leftCount) * 2 > (n - i - 1)) return i;
+    }
+    return -1;
+
+    }
+};
