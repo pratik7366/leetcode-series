@@ -1,0 +1,54 @@
+You are given an m x n integer matrix grid and an array queries of size k.
+
+Find an array answer of size k such that for each integer queries[i] you start in the top left cell of the matrix and repeat the following process:
+
+If queries[i] is strictly greater than the value of the current cell that you are in, then you get one point if it is your first time visiting this cell, and you can move to any adjacent cell in all 4 directions: up, down, left, and right.
+Otherwise, you do not get any points, and you end this process.
+
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    vector<int> maxPoints(vector<vector<int>>& grid, vector<int>& queries) {
+
+        int m = grid.size(), n = grid[0].size();
+        int k = queries.size();
+        vector<int> answer(k, 0);
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        priority_queue<pair<int, pair<int, int>>,
+                       vector<pair<int, pair<int, int>>>, greater<>>
+            pq;
+        vector<pair<int, int>> directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        vector<pair<int, int>> sortedQueries;
+
+        for (int i = 0; i < k; i++)
+            sortedQueries.push_back({queries[i], i});
+        sort(sortedQueries.begin(), sortedQueries.end());
+        pq.push({grid[0][0], {0, 0}});
+        visited[0][0] = true;
+        int count = 0;
+
+        for (auto [q, idx] : sortedQueries) {
+            while (!pq.empty() && pq.top().first < q) {
+                auto [val, pos] = pq.top();
+                pq.pop();
+                count++;
+                int r = pos.first, c = pos.second;
+                for (auto [dr, dc] : directions) {
+                    int nr = r + dr, nc = c + dc;
+                    if (nr >= 0 && nr < m && nc >= 0 && nc < n &&
+                        !visited[nr][nc]) {
+                        visited[nr][nc] = true;
+                        pq.push({grid[nr][nc], {nr, nc}});
+                    }
+                }
+            }
+            answer[idx] = count;
+        }
+        return answer;
+    }
+};
