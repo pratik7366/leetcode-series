@@ -1,0 +1,36 @@
+You are given a 0-indexed integer array nums.
+
+Return the maximum value over all triplets of indices (i, j, k) such that i < j < k. If all such triplets have a negative value, return 0.
+
+The value of a triplet of indices (i, j, k) is equal to (nums[i] - nums[j]) * nums[k].
+
+
+
+
+
+
+//c++ code 
+
+class Solution {
+    #define ll long long
+public:
+    long long maximumTripletValue(vector<int>& nums) {
+        int n =  nums.size();
+        
+        vector<int> right_max(n);
+        int max_val = nums[n-1];
+        for(int i=n-2;i>0;--i){
+            right_max[i] = max_val;
+            max_val = max(max_val,nums[i]);
+        }
+
+        
+        ll max_triplet = 0;
+        max_val = nums[0];
+        for(int i=1;i<n-1;++i){
+            max_triplet = max<ll>(max_triplet,(1LL*max_val-nums[i])*right_max[i]);
+            max_val = max(max_val,nums[i]);
+        }
+        return max_triplet;
+    }
+};
