@@ -1,0 +1,49 @@
+The XOR total of an array is defined as the bitwise XOR of all its elements, or 0 if the array is empty.
+
+For example, the XOR total of the array [2,5,6] is 2 XOR 5 XOR 6 = 1.
+Given an array nums, return the sum of all XOR totals for every subset of nums. 
+
+Note: Subsets with the same elements should be counted multiple times.
+
+An array a is a subset of an array b if a can be obtained from b by deleting some (possibly zero) elements of
+
+
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    
+        void dfs(int index, int currentXor, vector<int>& nums, int& total) {
+    if (index == nums.size()) {
+        total += currentXor;
+        return;
+    }
+    dfs(index + 1, currentXor ^ nums[index], nums, total);
+    dfs(index + 1, currentXor, nums, total);
+}
+
+int subsetXORSum(vector<int>& nums) {
+    int total = 0;
+    dfs(0, 0, nums, total);
+    return total;
+    }
+};
+
+
+
+<<<<<------------python code---------------->>>>>>>>>>>>>>>>>>>>>
+class Solution(object):
+    def subsetXORSum(self, nums):
+        def dfs(index, current_xor):
+            if index == len(nums):
+                return current_xor
+            include = dfs(index + 1, current_xor ^ nums[index])
+            exclude = dfs(index + 1, current_xor)
+            return include + exclude
+
+        return dfs(0, 0)
+        
