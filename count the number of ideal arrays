@@ -1,0 +1,92 @@
+You are given two integers n and maxValue, which are used to describe an ideal array.
+
+A 0-indexed integer array arr of length n is considered ideal if the following conditions hold:
+
+Every arr[i] is a value from 1 to maxValue, for 0 <= i < n.
+Every arr[i] is divisible by arr[i - 1], for 0 < i < n.
+Return the number of distinct ideal arrays of length n. Since the answer may be very large, return it modulo 109 + 7.
+
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    long MOD = 1e9 + 7;
+    long long factorial[100000];
+
+    
+    long long powerMod(long long base, long long exponent, long long mod) {
+        long long result = 1, current = base;
+        while (exponent > 0) {
+            if (exponent % 2 == 1) {
+                result = (result * current) % mod;
+            }
+            current = (current % mod * current % mod) % mod;
+            exponent /= 2;
+        }
+        return result % mod;
+    }
+
+    
+    long long computeNCR(long long n, long long r) {
+        long long numerator = factorial[n] % MOD;
+        long long denominator1 = powerMod(factorial[r], MOD - 2, MOD) % MOD;
+        long long denominator2 = powerMod(factorial[n - r], MOD - 2, MOD) % MOD;
+        long long temp = (numerator * denominator1) % MOD;
+        return (temp * denominator2) % MOD;
+    }
+
+    int idealArrays(int arrayLength, int maxVal) {
+        map<int, vector<int>> divisors;
+
+        
+        for (int i = 1; i <= maxVal; i++) {
+            for (int j = 2 * i; j <= maxVal; j += i) {
+                divisors[j].push_back(i);
+            }
+        }
+
+        long dp[15][maxVal + 1];
+        memset(dp, 0, sizeof(dp));
+
+        for (int val = 1; val <= maxVal; val++) {
+            dp[1][val] = 1;
+        }
+
+        for (int l = 2; l <= 14 && l <= arrayLength; l++) {
+            for (int val = 1; val <= maxVal; val++) {
+                for (int divisor : divisors[val]) {
+                    dp[l][val] = (dp[l][val] + dp[l - 1][divisor]) % MOD;
+                }
+            }
+        }
+
+        vector<long> countOfArraysOfLength(15, 0);
+        countOfArraysOfLength[1] = maxVal;
+
+        for (int l = 2; l <= 14 && l <= arrayLength; l++) {
+            long total = 0;
+            for (int val = 1; val <= maxVal; val++) {
+                total = (total + dp[l][val]) % MOD;
+            }
+            countOfArraysOfLength[l] = total;
+        }
+
+        factorial[0] = 1;
+        for (long i = 1; i < 100000; i++) {
+            factorial[i] = (factorial[i - 1] * i) % MOD;
+        }
+
+        long long finalAnswer = 0;
+
+        for (int l = 1; l <= 14 && l <= arrayLength; l++) {
+            long long combinations = computeNCR(arrayLength - 1, l - 1);
+            finalAnswer = (finalAnswer + (combinations * countOfArraysOfLength[l]) % MOD) % MOD;
+        }
+
+        return finalAnswer;
+    }
+};
