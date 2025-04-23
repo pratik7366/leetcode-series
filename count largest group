@@ -1,0 +1,35 @@
+You are given an integer n.
+
+Each number from 1 to n is grouped according to the sum of its digits.
+
+Return the number of groups that have the largest size.
+
+
+
+
+
+//c++ code 
+
+class Solution {
+public:
+    int countLargestGroup(int n) {
+    unordered_map<int, int> freq;
+    int maxSize = 0, count = 0;
+
+    for (int i = 1; i <= n; ++i) {
+        int sum = 0, num = i;
+        while (num) {
+            sum += num % 10;
+            num /= 10;
+        }
+        freq[sum]++;
+        maxSize = max(maxSize, freq[sum]);
+    }
+
+    for (auto& [key, value] : freq) {
+        if (value == maxSize) count++;
+    }
+
+    return count;
+    }
+};
