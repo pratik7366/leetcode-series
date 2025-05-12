@@ -1,0 +1,54 @@
+You are given an integer array digits, where each element is a digit. The array may contain duplicates.
+
+You need to find all the unique integers that follow the given requirements:
+
+The integer consists of the concatenation of three elements from digits in any arbitrary order.
+The integer does not have leading zeros.
+The integer is even.
+For example, if the given digits were [1, 2, 3], integers 132 and 312 follow the requirements.
+
+Return a sorted array of the unique integers.
+
+
+
+
+
+//c++c code 
+
+class Solution {
+public:
+    vector<int> findEvenNumbers(vector<int>& digits) {
+        
+        unordered_map<int, int> freq;
+        for (int d : digits) freq[d]++;
+
+        set<int> result;
+
+       
+        for (int i = 0; i < 1000; ++i) {
+            if (i < 100 || i % 2 != 0) continue; 
+
+            int a = i / 100;
+            int b = (i / 10) % 10;
+            int c = i % 10;
+
+            unordered_map<int, int> needed;
+            needed[a]++;
+            needed[b]++;
+            needed[c]++;
+
+            bool valid = true;
+            for (auto& p : needed) {
+                if (freq[p.first] < p.second) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid)
+                result.insert(i);
+        }
+
+        return vector<int>(result.begin(), result.end());
+    }
+};
